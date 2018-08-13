@@ -1,0 +1,68 @@
+﻿@model TabularApiClient.Models.DynamicApiList
+<script>
+    $(document).ready(function () {
+        if ($("td table").length > 0) {
+            $("#innerTableBtn").show();
+        }
+
+        $("#innerTableBtn").on("click", function() {
+            if (!$(this).hasClass("collapse-active")) {
+                $("td table").hide();
+                $(this).addClass("collapse-active");
+                $(this).val("Show Inner Tables");
+            } else {
+                $("td table").show();
+                $(this).removeClass("collapse-active");
+                $(this).val("Hide Inner Tables");
+            }
+        });
+
+        $("#quick-links").on("click", "li a", function (e) {
+            e.preventDefault();
+            $("#ApiUrl").val($(this).attr("href"));
+        });
+    });
+</script>
+<div class="container">
+    <div class="row">
+        @using (Html.BeginForm("Dynamic", "Home", null, FormMethod.Post, new { @class = "form-inline pull-left" }))
+        {
+            <div class="form-group">
+                <label for="apiUrl">URL:</label>
+                <input id="ApiUrl" name="ApiUrl" class="form-control" style="width: 500px;" value="@Model.ApiUrl" />
+            </div>
+            <div class="form-group">
+                <label for="Exchange">Exchange:</label>
+                <input id="Exchange" name="Exchange" class="form-control" style="width: 50px;" value="@Model.Exchange" />
+            </div>
+            <div class="form-group dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                    Quick Links
+                    <span class="caret"></span>
+                </button>
+                <ul id="quick-links" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="https://localhost/test1">Test1</a></li>
+                    <li role="presentation"><a role="menuitem" tabindex="-1" href="https://localhost/test2">Test2</a></li>
+                </ul>
+            </div>
+            <button type="submit" class="btn btn-success">Submit</button>
+        }
+    </div>
+    <div class="row">
+        @if (Model.ApiList != null)
+        {
+            <input type="button" class="btn-xs btn-default" id="innerTableBtn" value="Hide Inner Tables" style="margin: 5px 10px; display: none;" />
+            @Html.DisplayFor(m => m.ApiList)
+        }
+
+        @if (Model.ApiObject != null)
+        {
+            @Html.DisplayFor(m => m.ApiObject)
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <span>The output of API must be array</span>
+        }
+    </div>
+</div>

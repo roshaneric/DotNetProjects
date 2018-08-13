@@ -1,0 +1,36 @@
+﻿@using Newtonsoft.Json.Linq
+@model JObject
+
+@{
+    var propValues = Model.Children();
+}
+
+<tr>
+    @foreach (var jToken in propValues)
+    {
+        var jProperty = (JProperty)jToken;
+
+        var prop = jProperty.Name;
+
+        <td>
+            @if (jProperty.Value is JArray)
+            {
+                var innerArray = (JArray)jProperty.Value;
+                        
+                @Html.DisplayFor(m => innerArray)
+            }
+            else if (jProperty.Value is JObject)
+            {
+                var innerObj = (JObject)jProperty.Value;
+
+                @Html.DisplayFor(m => innerObj)
+            }
+            else
+            {
+                <text>
+                    @jProperty.Value
+                </text>
+            }
+        </td>
+    }
+</tr>
